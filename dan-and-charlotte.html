@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The North Pole Decryption | Dan & Charlotte</title>
+    <style>
+        :root { --xmas-red: #b30000; --xmas-green: #165b33; --gold: #d4af37; --snow: #f8f9fa; }
+        body { 
+            background-color: var(--xmas-green); 
+            background-image: radial-gradient(circle, #1a6d3d 10%, transparent 10%), radial-gradient(circle, #1a6d3d 10%, transparent 10%);
+            background-size: 20px 20px;
+            color: var(--snow); font-family: 'Georgia', serif; padding: 20px; 
+        }
+        .container { 
+            max-width: 850px; margin: auto; background: white; color: #333; 
+            border: 10px double var(--xmas-red); border-radius: 15px; padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        }
+        h1 { color: var(--xmas-red); text-align: center; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
+        h2 { color: var(--xmas-green); font-size: 1.2em; border-left: 5px solid var(--gold); padding-left: 10px; }
+        .puzzle-card { background: #fffcf2; border: 1px solid #ddd; border-radius: 10px; padding: 25px; margin: 25px 0; box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }
+        .hex-display { 
+            background: #222; color: #00ff41; font-family: 'Courier New', monospace; 
+            padding: 20px; text-align: center; border-radius: 5px; font-size: 1.3em;
+            letter-spacing: 3px; line-height: 1.5; margin: 15px 0;
+        }
+        input { padding: 12px; border: 2px solid #ccc; border-radius: 5px; width: calc(100% - 30px); margin: 10px 0; font-family: 'Courier New', monospace; font-size: 1.1em; }
+        button { 
+            background: var(--xmas-red); color: white; border: none; padding: 12px 25px; 
+            border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.1em; text-transform: uppercase;
+        }
+        button:hover { background: var(--gold); color: black; }
+        .hidden { display: none; }
+        .hint { 
+            font-size: 0.85em; color: #666; font-style: italic; font-family: sans-serif; 
+            cursor: pointer; padding: 8px 12px; background: #f5f5f5; border: 1px dashed #999;
+            border-radius: 5px; margin: 10px 0; user-select: none;
+        }
+        .hint:hover { background: #e8e8e8; }
+        .hint-content { display: none; margin-top: 5px; }
+        .hint.revealed .hint-content { display: block; }
+        .hint-toggle::before { content: "💡 Click to reveal hint"; }
+        .hint.revealed .hint-toggle::before { content: "💡 Hint:"; }
+        .success-banner { background: #e7f3ef; border: 2px solid var(--xmas-green); color: var(--xmas-green); padding: 15px; border-radius: 5px; text-align: center; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <p style="text-align: right; color: var(--xmas-red); font-weight: bold;">Priority: CHRISTMAS EVE DELIVERY</p>
+    <h1>The North Pole Terminal</h1>
+    <p style="text-align: center; font-style: italic;">Dan & Charlotte, the gift coordinates have been encrypted to prevent Grinch interference. Decrypt the signals to find the fragments.</p>
+
+    <div class="puzzle-card" id="stage1">
+        <h2>🎄 Signal 01: Location Encoding</h2>
+        <p>A Secret location, in your house.</p>
+        <div class="hex-display">
+            50 4C 41 59 52 4F 4F 4D <br> 4B 41 4C 4C 41 58
+        </div>
+        <div class="hint" onclick="toggleHint(this)">
+            <div class="hint-toggle"></div>
+            <div class="hint-content">hex 50 = P</div>
+        </div>
+        <input type="text" id="ans1" placeholder="ENTER LOCATION...">
+        <button onclick="check1()">Verify Coordinates</button>
+
+        <div id="next1" class="hidden">
+            <div class="success-banner">✨ <strong>LOCATION CONFIRMED:</strong> Proceed to the Playroom and look in the Kallax, find the password.</div>
+            <img src="images/playroom-kallax.jpg" alt="Playroom Kallax" style="max-width: 100%; border-radius: 10px;">
+            <input type="text" id="secretA" placeholder="Password">
+            <button onclick="unlockStage2()">Initialize Stage 2</button>
+        </div>
+    </div>
+
+    <div class="puzzle-card hidden" id="stage2">
+        <h2>❄️ Signal 02: Fragile Memories</h2>
+        <p>The second fragment requires decryption. All intelligence has been encoded to prevent interception.</p>
+        
+        <p><strong>Encrypted Intelligence:</strong></p>
+        <div class="hex-display">
+            WKH VHFRQG IUDJPHQW LV KLGGHQ LQ D SODFH RI UHVW<br>
+            EHKLQG D PHPRU\ ZLWK D VOLJKWO_ GDPDJHG IUDPH<br>
+            LW ZDLWV LQ HOOLHV URRP
+        </div>
+        
+        <div class="hint" onclick="toggleHint(this)">
+            <div class="hint-toggle"></div>
+            <div class="hint-content">Caesar 3</div>
+        </div>
+        
+        <input type="text" id="locationB" placeholder="DECODE THE ROOM LOCATION...">
+        <button onclick="verifyLocation()">Verify Location</button>
+        
+        <div id="nextB" class="hidden">
+            <div class="success-banner">✨ <strong>LOCATION DECODED:</strong> Search the room for the photo frame with a slightly broken corner. Find the clue inside and retreive the password.</div>
+            <input type="text" id="secretB" placeholder="Password">
+            <button onclick="unlockStage3()">Initialize Final Stage</button>
+        </div>
+    </div>
+
+    <div class="puzzle-card hidden" id="stage3">
+        <h2>🎁 Signal 03: Final Computation</h2>
+        <p>Two final fragments await discovery. Both contain critical data for the unlock sequence.</p>
+        
+        <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 15px 0;">
+            <strong>📍 LOCATION ALPHA:</strong> Where knowledge dwells in rows, seek the land of the rising sun's culinary secrets. The treasure lies beneath the wisdom.
+            <div class="hint" onclick="toggleHint(this)" style="margin-top: 10px;">
+                <div class="hint-toggle"></div>
+                <div class="hint-content">Kitchen bookshelf.</div>
+            </div>
+        </div>
+        
+        <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 15px 0;">
+            <strong>📍 LOCATION BETA:</strong> 8/25 DB
+            <div class="hint" onclick="toggleHint(this)" style="margin-top: 10px;">
+                <div class="hint-toggle"></div>
+                <div class="hint-content">Perhaps a painting, by Dan.</div>
+            </div>
+        </div>
+        
+        <p><strong>A memorable number:</strong></p>
+        <div style="display: flex; gap: 10px; align-items: center; margin: 10px 0;">
+            <span style="font-weight: bold;"></span>
+            <input type="text" id="phoneArea" placeholder="xxx" style="width: 80px; text-align: center;">
+            <input type="text" id="phoneNumber" placeholder="xxxxxx" style="width: 120px; text-align: center;">
+        </div>
+        
+        <p><strong>A random number:</strong></p>
+        <input type="text" id="fragmentD" placeholder="xxxxxx" style="width: 200px; text-align: center;">
+        
+        <button onclick="validateFragments()">Process Fragments</button>
+        
+        <div id="finalCalcSection" class="hidden" style="background: #e7f3ef; border: 2px solid var(--xmas-green); padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h3 style="color: var(--xmas-green); margin-top: 0;">🔢 Final Calculation Unlocked</h3>
+            <p><strong>The Christmas Algorithm:</strong></p>
+            <ol style="font-size: 0.9em; line-height: 1.6;">
+                <li>Take the <strong>last 3 digits</strong> of the phone number</li>
+                <li>Take the <strong>first digit</strong> of the random number</li>
+                <li>Add them together</li>
+                <li>If the result has 4 digits, use only the last 3</li>
+            </ol>
+            <input type="text" id="finalCode" placeholder="Enter 3-digit result" style="width: 150px; text-align: center; font-size: 1.2em; font-weight: bold;">
+            <button onclick="executeUnlock()">Execute Final Unlock</button>
+        </div>
+    </div>
+
+    <div id="winner" class="hidden" style="text-align: center; border: 5px solid var(--gold); padding: 30px; border-radius: 15px; margin-top: 20px;">
+        <h1 style="border: none;">🔓 ACCESS GRANTED</h1>
+        <p>The lockbox combination is:</p>
+        <h1 id="lockCodeDisplay" style="font-size: 5em; letter-spacing: 15px; margin: 0; color: var(--xmas-red);">000</h1>
+        <p>Merry Christmas, Dan & Charlotte!</p>
+    </div>
+</div>
+
+<script>
+    // --- SETTINGS ---
+    const CONFIG = {
+        wordA: "reindeer", 
+        wordB: "mistletoe",
+        phoneArea: "282",      // Expected area code from under Japanese Kitchen book
+        phoneNumber: "778838", // Expected phone number from under Japanese Kitchen book
+        fragmentD: "258397",   // Expected 6-digit code from 8/25DB location
+        finalCode: "021",      // The actual code for your physical lock
+        // Stage completion tokens (harder to guess)
+        tokens: {
+            stage1: "elf3928kx",
+            stage2: "snow7241qp", 
+            stage3: "gift5693mr",
+            complete: "xmas9817tz"
+        }
+    };
+
+    // Initialize progress from URL on page load
+    function initializeProgress() {
+        const params = new URLSearchParams(window.location.search);
+        const stage1Complete = params.get('s1') === CONFIG.tokens.stage1;
+        const stage2Complete = params.get('s2') === CONFIG.tokens.stage2;
+        const stage3Complete = params.get('s3') === CONFIG.tokens.stage3;
+        const puzzleComplete = params.get('fin') === CONFIG.tokens.complete;
+        
+        if (stage1Complete) {
+            document.getElementById('next1').classList.remove('hidden');
+        }
+        if (stage2Complete) {
+            document.getElementById('stage2').classList.remove('hidden');
+        }
+        if (stage3Complete) {
+            document.getElementById('stage3').classList.remove('hidden');
+        }
+        if (puzzleComplete) {
+            document.getElementById('lockCodeDisplay').innerText = CONFIG.finalCode;
+            document.getElementById('winner').classList.remove('hidden');
+        }
+    }
+
+    function updateURL(stage) {
+        const params = new URLSearchParams(window.location.search);
+        
+        if (stage === 'stage1') {
+            params.set('s1', CONFIG.tokens.stage1);
+        } else if (stage === 'stage2') {
+            params.set('s2', CONFIG.tokens.stage2);
+        } else if (stage === 'stage3') {
+            params.set('s3', CONFIG.tokens.stage3);
+        } else if (stage === 'complete') {
+            params.set('fin', CONFIG.tokens.complete);
+        }
+        
+        const newURL = window.location.pathname + '?' + params.toString();
+        window.history.pushState({}, '', newURL);
+    }
+
+    function toggleHint(hintElement) {
+        hintElement.classList.toggle('revealed');
+    }
+
+    // Initialize progress when page loads
+    window.addEventListener('DOMContentLoaded', initializeProgress);
+
+    function check1() {
+        const val = document.getElementById('ans1').value.toUpperCase().replace(/\s/g, '');
+        if(val === "PLAYROOMKALLAX") {
+            document.getElementById('next1').classList.remove('hidden');
+            updateURL('stage1');
+        } else { alert("Coordinate error! Check your Hex conversion."); }
+    }
+
+    function unlockStage2() {
+        if(document.getElementById('secretA').value.toLowerCase().trim() === CONFIG.wordA) {
+            document.getElementById('stage2').classList.remove('hidden');
+            document.getElementById('stage2').scrollIntoView();
+            updateURL('stage2');
+        } else { alert("Incorrect keyword from Clue A."); }
+    }
+
+    function verifyLocation() {
+        const val = document.getElementById('locationB').value.toUpperCase().replace(/\s/g, '');
+        if(val === "ELLIESROOM" || val === "ELLIE'SROOM") {
+            document.getElementById('nextB').classList.remove('hidden');
+        } else { alert("Incorrect location! Check your Caesar cipher decryption."); }
+    }
+
+    function unlockStage3() {
+        if(document.getElementById('secretB').value.toLowerCase().trim() === CONFIG.wordB) {
+            document.getElementById('stage3').classList.remove('hidden');
+            document.getElementById('stage3').scrollIntoView();
+            updateURL('stage3');
+        } else { alert("Incorrect keyword from Clue B."); }
+    }
+
+    function validateFragments() {
+        const phoneArea = document.getElementById('phoneArea').value.trim();
+        const phoneNumber = document.getElementById('phoneNumber').value.trim();
+        const fragmentD = document.getElementById('fragmentD').value.trim();
+
+        // Check if phone number components are correct
+        if (phoneArea === CONFIG.phoneArea && phoneNumber === CONFIG.phoneNumber && fragmentD === CONFIG.fragmentD) {
+            document.getElementById('finalCalcSection').classList.remove('hidden');
+            document.getElementById('finalCalcSection').scrollIntoView();
+        } else {
+            alert("Fragment validation failed! Check your physical locations");
+        }
+    }
+
+    function executeUnlock() {
+        const finalInput = document.getElementById('finalCode').value.trim();
+        
+        // Calculate expected result: last 3 digits of phone (838) + first digit of Fragment D (2) = 840
+        // If result > 999, take last 3 digits
+        const phoneLastThree = parseInt(CONFIG.phoneNumber.slice(-3)); // 838
+        const fragmentFirstDigit = parseInt(CONFIG.fragmentD.charAt(0)); // 2
+        const calculatedResult = phoneLastThree + fragmentFirstDigit; // 840
+        const expectedCode = calculatedResult > 999 ? calculatedResult.toString().slice(-3) : calculatedResult.toString();
+
+        if (finalInput === expectedCode || finalInput === CONFIG.finalCode) {
+            document.getElementById('lockCodeDisplay').innerText = CONFIG.finalCode;
+            document.getElementById('winner').classList.remove('hidden');
+            document.getElementById('winner').scrollIntoView();
+            updateURL('complete');
+        } else {
+            alert("Calculation incorrect! Follow the Christmas Algorithm:\n1. Last 3 digits of phone number\n2. First digit of Fragment D\n3. Add them together");
+        }
+    }
+</script>
+
+</body>
+</html>

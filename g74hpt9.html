@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Access</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .lock-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        
+        .password {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffd700;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            letter-spacing: 2px;
+            border: 2px dashed rgba(255, 215, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 1rem;
+        }
+        
+        .decoration {
+            margin: 1rem 0;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="lock-icon">🔒</div>
+        <h1>Secret Access</h1>
+        <div class="decoration">❄️ ❄️ ❄️</div>
+        <div class="password">reindeer</div>
+        <div class="decoration">❄️ ❄️ ❄️</div>
+        <p class="subtitle">Handle with care</p>
+    </div>
+</body>
+</html>
