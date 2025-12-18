@@ -224,23 +224,34 @@
 </div>
 
 <script>
-    // --- SETTINGS ---
+    // Configuration data encoded for security
+    const _0x4a2b = ['cmVpbmRlZXI=','bWlzdGxldG9l','Mjgy','Nzc4ODM4','MjU4Mzk3','MTMx','ZWxmMzkyOGt4','c25vdzcyNDFxcA==','Z2lmdDU2OTNtcg==','Y2FsYzQ4MTZ2cA==','eG1hczk4MTd0eg=='];
+    const _0x1b8f = (function(a,b){return atob(a);}); 
+    
+    // Decoy data to confuse source viewers
+    const _0xdecoy = ['UkVBTFBBU1M=','RkFLRUFOU1dFUg==','VE9PRUFTWQ==','V1JPTkdQQVNT'];
+    const _0xfake = {incorrect: 'wrong', fake: 'decoy', misleading: 'false'};
+    
     const CONFIG = {
-        wordA: "reindeer", 
-        wordB: "mistletoe",
-        phoneArea: "282",      // Expected area code from under Japanese Kitchen book
-        phoneNumber: "778838", // Expected phone number from under Japanese Kitchen book
-        fragmentD: "258397",   // Expected 6-digit code from 8/25DB location
-        finalCode: "131",      // The actual code for your physical lock
-        // Stage completion tokens (harder to guess)
+        wordA: _0x1b8f(_0x4a2b[0]), 
+        wordB: _0x1b8f(_0x4a2b[1]),
+        phoneArea: _0x1b8f(_0x4a2b[2]),
+        phoneNumber: _0x1b8f(_0x4a2b[3]),
+        fragmentD: _0x1b8f(_0x4a2b[4]),
+        finalCode: _0x1b8f(_0x4a2b[5]),
         tokens: {
-            stage1: "elf3928kx",
-            stage2: "snow7241qp", 
-            stage3: "gift5693mr",
-            fragments: "calc4816vp",
-            complete: "xmas9817tz"
+            stage1: _0x1b8f(_0x4a2b[6]),
+            stage2: _0x1b8f(_0x4a2b[7]), 
+            stage3: _0x1b8f(_0x4a2b[8]),
+            fragments: _0x1b8f(_0x4a2b[9]),
+            complete: _0x1b8f(_0x4a2b[10])
         }
     };
+    
+    // Dummy functions to obfuscate real logic
+    function _0xdummyCheck() { return _0xfake.incorrect === 'right'; }
+    function _0xfakeValidate(x) { return x !== 'realanswer'; }
+    const _0xmislead = () => false;
 
     // Initialize progress from URL on page load
     function initializeProgress() {
@@ -297,7 +308,7 @@
 
     function check1() {
         const val = document.getElementById('ans1').value.toUpperCase().replace(/\s/g, '');
-        if(val === "PLAYROOMKALLAX") {
+        if(val === atob('UExBWVJPT01LQUxMQVg=')) {
             document.getElementById('next1').classList.remove('hidden');
             updateURL('stage1');
         } else { alert("Coordinate error! Check your Hex conversion."); }
@@ -313,7 +324,8 @@
 
     function verifyLocation() {
         const val = document.getElementById('locationB').value.toUpperCase().replace(/\s/g, '');
-        if(val === "ELLIESROOM" || val === "ELLIE'SROOM") {
+        const _0x2c4d = ['RUxMSUVTUk9PTQ==','RUxMSUUnU1JPT00='];
+        if(val === atob(_0x2c4d[0]) || val === atob(_0x2c4d[1])) {
             document.getElementById('nextB').classList.remove('hidden');
         } else { alert("Incorrect location! Check your Caesar cipher decryption."); }
     }
@@ -344,18 +356,17 @@
     function executeUnlock() {
         const finalInput = document.getElementById('finalCode').value.trim();
         
-        const K = 3; // Christmas constant
-        const goldRushYear = 1849; // Gold Rush explosion year
-        const a = parseInt(CONFIG.phoneArea); // 282
-        const b = parseInt(CONFIG.phoneNumber); // 778838
-        const c = parseInt(CONFIG.fragmentD); // 258397
+        const K = 0x3; // Christmas constant
+        const goldRushYear = 0x739; // Gold Rush explosion year in hex
+        const a = parseInt(CONFIG.phoneArea);
+        const b = parseInt(CONFIG.phoneNumber);
+        const c = parseInt(CONFIG.fragmentD);
         
         const calculation = (K * (a * a) + b - K * c) / goldRushYear; 
         const result = Math.round(Math.abs(calculation));
         
-        // Result should naturally be a 3-digit number
         const finalResult = result;
-        const expectedCode = finalResult.toString().padStart(3, '0'); // Ensure 3 digits
+        const expectedCode = finalResult.toString().padStart(0x3, '0');
 
         if (finalInput === expectedCode || finalInput === CONFIG.finalCode) {
             document.getElementById('lockCodeDisplay').innerText = CONFIG.finalCode;
