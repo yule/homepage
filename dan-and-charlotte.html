@@ -122,26 +122,37 @@
         <p><strong>A memorable number:</strong></p>
         <div style="display: flex; gap: 10px; align-items: center; margin: 10px 0;">
             <span style="font-weight: bold;"></span>
-            <input type="text" id="phoneArea" placeholder="xxx" style="width: 80px; text-align: center;">
-            <input type="text" id="phoneNumber" placeholder="xxxxxx" style="width: 120px; text-align: center;">
+            a:<input type="text" id="phoneArea" placeholder="xxx" style="width: 80px; text-align: center;">
+            b:<input type="text" id="phoneNumber" placeholder="xxxxxx" style="width: 120px; text-align: center;">
         </div>
         
         <p><strong>A random number:</strong></p>
-        <input type="text" id="fragmentD" placeholder="xxxxxx" style="width: 200px; text-align: center;">
+        c: <input type="text" id="fragmentD" placeholder="xxxxxx" style="width: 200px; text-align: center;">
         
         <button onclick="validateFragments()">Process Fragments</button>
         
         <div id="finalCalcSection" class="hidden" style="background: #e7f3ef; border: 2px solid var(--xmas-green); padding: 20px; border-radius: 10px; margin: 20px 0;">
             <h3 style="color: var(--xmas-green); margin-top: 0;">🔢 Final Calculation Unlocked</h3>
             <p><strong>The Christmas Algorithm:</strong></p>
-            <ol style="font-size: 0.9em; line-height: 1.6;">
-                <li>Take the <strong>last 3 digits</strong> of the phone number</li>
-                <li>Take the <strong>first digit</strong> of the random number</li>
-                <li>Add them together</li>
-                <li>If the result has 4 digits, use only the last 3</li>
-            </ol>
-            <input type="text" id="finalCode" placeholder="Enter 3-digit result" style="width: 150px; text-align: center; font-size: 1.2em; font-weight: bold;">
-            <button onclick="executeUnlock()">Execute Final Unlock</button>
+            <div style="margin: 15px 0; text-align: center;">
+                <span style="background: linear-gradient(45deg, #d4af37, #ffd700); color: #8B4513; padding: 8px 16px; border-radius: 8px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: inline-block;">K = The age between the two young elves (E & T)</span>
+                <span style="font-size: 0.9em; color: #666; margin-left: 10px;">(Christmas constant)</span>
+            </div>
+            <div style="margin: 25px 0; padding: 20px; background: linear-gradient(135deg, #e7f3ef, #d4edda); border: 2px solid var(--xmas-green); border-radius: 10px; text-align: center;">
+                <strong style="font-size: 1.3em; color: var(--xmas-green);">Calculate:</strong><br>
+                <div style="font-size: 1.6em; font-weight: bold; color: #2c5530; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); font-family: 'Courier New', monospace; margin: 15px 0;">
+                    <div style="border-bottom: 3px solid #2c5530; padding-bottom: 8px; margin-bottom: 8px;">
+                        (<span style="color: #8B4513;">K</span>a² + b - <span style="color: #8B4513;">K</span>c)
+                    </div>
+                    <div style="font-size: 1.2em;">
+                        Gold Rush explosion year
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin: 20px 0;">
+                <input type="text" id="finalCode" placeholder="Enter 3-digit result" style="width: 150px; text-align: center; font-size: 1.2em; font-weight: bold; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
+                <button onclick="executeUnlock()" style="width: 200px; margin: 0 auto;">Execute Final Unlock</button>
+            </div>
         </div>
     </div>
 
@@ -161,12 +172,13 @@
         phoneArea: "282",      // Expected area code from under Japanese Kitchen book
         phoneNumber: "778838", // Expected phone number from under Japanese Kitchen book
         fragmentD: "258397",   // Expected 6-digit code from 8/25DB location
-        finalCode: "021",      // The actual code for your physical lock
+        finalCode: "131",      // The actual code for your physical lock
         // Stage completion tokens (harder to guess)
         tokens: {
             stage1: "elf3928kx",
             stage2: "snow7241qp", 
             stage3: "gift5693mr",
+            fragments: "calc4816vp",
             complete: "xmas9817tz"
         }
     };
@@ -177,6 +189,7 @@
         const stage1Complete = params.get('s1') === CONFIG.tokens.stage1;
         const stage2Complete = params.get('s2') === CONFIG.tokens.stage2;
         const stage3Complete = params.get('s3') === CONFIG.tokens.stage3;
+        const fragmentsComplete = params.get('frg') === CONFIG.tokens.fragments;
         const puzzleComplete = params.get('fin') === CONFIG.tokens.complete;
         
         if (stage1Complete) {
@@ -187,6 +200,9 @@
         }
         if (stage3Complete) {
             document.getElementById('stage3').classList.remove('hidden');
+        }
+        if (fragmentsComplete) {
+            document.getElementById('finalCalcSection').classList.remove('hidden');
         }
         if (puzzleComplete) {
             document.getElementById('lockCodeDisplay').innerText = CONFIG.finalCode;
@@ -203,6 +219,8 @@
             params.set('s2', CONFIG.tokens.stage2);
         } else if (stage === 'stage3') {
             params.set('s3', CONFIG.tokens.stage3);
+        } else if (stage === 'fragments') {
+            params.set('frg', CONFIG.tokens.fragments);
         } else if (stage === 'complete') {
             params.set('fin', CONFIG.tokens.complete);
         }
@@ -258,6 +276,7 @@
         if (phoneArea === CONFIG.phoneArea && phoneNumber === CONFIG.phoneNumber && fragmentD === CONFIG.fragmentD) {
             document.getElementById('finalCalcSection').classList.remove('hidden');
             document.getElementById('finalCalcSection').scrollIntoView();
+            updateURL('fragments');
         } else {
             alert("Fragment validation failed! Check your physical locations");
         }
@@ -266,12 +285,25 @@
     function executeUnlock() {
         const finalInput = document.getElementById('finalCode').value.trim();
         
-        // Calculate expected result: last 3 digits of phone (838) + first digit of Fragment D (2) = 840
-        // If result > 999, take last 3 digits
-        const phoneLastThree = parseInt(CONFIG.phoneNumber.slice(-3)); // 838
-        const fragmentFirstDigit = parseInt(CONFIG.fragmentD.charAt(0)); // 2
-        const calculatedResult = phoneLastThree + fragmentFirstDigit; // 840
-        const expectedCode = calculatedResult > 999 ? calculatedResult.toString().slice(-3) : calculatedResult.toString();
+        // Christmas Algorithm: x = (K × a² + b - K × c) ÷ 1849
+        // K = 3, a = 282, b = 778838, c = 258397
+        // (3 × 282² + 778838 - 3 × 258397) ÷ 1849
+        // = (3 × 79524 + 778838 - 775191) ÷ 1849
+        // = (238572 + 778838 - 775191) ÷ 1849
+        // = 242219 ÷ 1849 = 130.995... ≈ 131
+        
+        const K = 3; // Christmas constant
+        const goldRushYear = 1849; // Gold Rush explosion year
+        const a = parseInt(CONFIG.phoneArea); // 282
+        const b = parseInt(CONFIG.phoneNumber); // 778838
+        const c = parseInt(CONFIG.fragmentD); // 258397
+        
+        const calculation = (K * (a * a) + b - K * c) / goldRushYear; // (3 × 282² + 778838 - 3 × 258397) ÷ 1849
+        const result = Math.round(Math.abs(calculation)); // Round to nearest whole number
+        
+        // Result should naturally be a 3-digit number
+        const finalResult = result;
+        const expectedCode = finalResult.toString().padStart(3, '0'); // Ensure 3 digits
 
         if (finalInput === expectedCode || finalInput === CONFIG.finalCode) {
             document.getElementById('lockCodeDisplay').innerText = CONFIG.finalCode;
@@ -279,7 +311,7 @@
             document.getElementById('winner').scrollIntoView();
             updateURL('complete');
         } else {
-            alert("Calculation incorrect! Follow the Christmas Algorithm:\n1. Last 3 digits of phone number\n2. First digit of Fragment D\n3. Add them together");
+            alert("Calculation incorrect! Follow the Christmas Algorithm:\n(Ka² + b - Kc) ÷ Gold rush, think SF football team");
         }
     }
 </script>
